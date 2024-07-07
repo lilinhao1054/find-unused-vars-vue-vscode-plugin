@@ -6,7 +6,7 @@ function getUnusedVarId(messages) {
   return messages.map(item => {
     const match = item.message.match(/'(.*)' is defined but never used./);
     return match && match[1];
-} );
+  });
 }
 
 // Create an instance of ESLint with the configuration passed to the function

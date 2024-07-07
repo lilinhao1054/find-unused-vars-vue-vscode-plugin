@@ -14,10 +14,12 @@
   ],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "find-unused-vars-vue.fuvv",
-      "title": "find unused vars in vue"
-    }]
+    "commands": [
+      {
+        "command": "find-unused-vars-vue.fuvv",
+        "title": "find unused vars in vue"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",
@@ -25,18 +27,18 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.91.0",
-    "@types/mocha": "^10.0.7",
-    "@types/node": "20.x",
-    "typescript": "^5.4.5",
-    "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.4.0",
     "@babel/core": "^7.24.7",
     "@babel/generator": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
     "@babel/template": "^7.24.7",
     "@babel/traverse": "^7.24.7",
+    "@types/mocha": "^10.0.7",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.91.0",
+    "@vscode/test-cli": "^0.0.9",
+    "@vscode/test-electron": "^2.4.0",
     "eslint": "^9.6.0",
+    "typescript": "^5.4.5",
     "vue-template-compiler": "^2.7.16"
   }
 }
