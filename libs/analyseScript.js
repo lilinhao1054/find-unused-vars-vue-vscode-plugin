@@ -7,8 +7,7 @@ function analyseScript(code) {
   const scriptContent = getScriptContent(code);
   const { data, methods, props, computed } = getOptions(code);
 
-
-  const visitor = {
+  const transform2class = {
     ExportDefaultDeclaration(path) {
       const { node } = path;
       const declaration = path.node.declaration;
@@ -37,20 +36,11 @@ function analyseScript(code) {
 
         // 替换原来的导出声明
         path.replaceWith(classDeclaration);
-
-        // 由于我们更改了导出的类型，需要添加一个重新导出的语句
-        path.insertAfter(t.exportDefaultDeclaration(className));
       }
     }
   }
 
-  const ast = babel.parse(scriptContent, {
-    sourceType: 'module',
-  });
-
-  traverse(ast, visitor);
-
-  traverse(ast, {
+  const addDec = {
     ClassDeclaration(path) {
       // 创建一个新的类属性声明
       const customProp = t.classProperty(t.identifier('customProperty'), t.stringLiteral('defaultValue'));
@@ -67,13 +57,11 @@ function analyseScript(code) {
       classBody.body.unshift(...dataDec, ...propsDec, ...computedDec);
       classBody.body.push(...methodsDec);
     },
-  })
+  }
 
   const allIds = new Set();
   const usedIds = new Set();
-
-  // 遍历 AST
-  traverse(ast, {
+  const findUnusedVar = {
     ClassDeclaration(path) {
       // 记录类属性
       path.node.body.body.forEach((node) => {
@@ -94,7 +82,17 @@ function analyseScript(code) {
         usedIds.add(path.node.property.name);
       }
     }
+  }
+
+  const ast = babel.parse(scriptContent, {
+    sourceType: 'module',
   });
+
+  traverse(ast, transform2class);
+
+  traverse(ast, addDec)
+
+  traverse(ast, findUnusedVar);
 
   const unusedIds = [...allIds].filter(item => !usedIds.has(item));
 
