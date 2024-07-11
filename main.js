@@ -3,6 +3,7 @@ const { analyseScript } = require('./libs/analyseScript');
 const { lintCode } = require('./libs/lintCode');
 const { getRender, getOptions, getScriptContent } = require('./libs/parseVue');
 const findVarPos = require('./libs/findVarPos');
+const getKeys = require('./libs/getKeys');
 
 
 module.exports = async (code) => {
@@ -14,10 +15,10 @@ module.exports = async (code) => {
   const unusedIds = unusedIdsInTemplate.filter(id => unusedIdsInScript.includes(id));
 
   // 按功能分流
-  const unusedIdsInData = unusedIds.filter(id => Object.keys(data).includes(id));
-  const unusedIdsInProps = unusedIds.filter(id => Object.keys(props).includes(id));
-  const unusedIdsInMethods = unusedIds.filter(id => Object.keys(methods).includes(id));
-  const unusedIdsInComputed = unusedIds.filter(id => Object.keys(computed).includes(id));
+  const unusedIdsInData = unusedIds.filter(id => getKeys(data).includes(id));
+  const unusedIdsInProps = unusedIds.filter(id => getKeys(props).includes(id));
+  const unusedIdsInMethods = unusedIds.filter(id => getKeys(methods).includes(id));
+  const unusedIdsInComputed = unusedIds.filter(id => getKeys(computed).includes(id));
 
   // 找位置，打标签
   const { propsLocArr, methodsLocArr, dataLocArr, computedLocArr } = findVarPos(code);

@@ -1,5 +1,6 @@
 const { lintCode } = require('./lintCode');
 const { getRender, getOptions, getScriptContent } = require('./parseVue');
+const getKeys = require('./getKeys');
 
 async function analyseTemplate(code) {
   const render = getRender(code);
@@ -8,7 +9,7 @@ async function analyseTemplate(code) {
   const { props, data, methods, computed } = options;
 
   function renderVars(obj) {
-    const keys = Object.keys(obj);
+    const keys = getKeys(obj);
     return keys.length === 0 ? '' : `var ${keys.join(',')};`
   }
 
@@ -22,10 +23,10 @@ async function analyseTemplate(code) {
 `
 
   const unusedIds = await lintCode(resolvedCode);
-  const unusedIdsInTemplate = unusedIds.filter(id => Object.keys(data).includes(id)
-    || Object.keys(props).includes(id)
-    || Object.keys(methods).includes(id)
-    || Object.keys(computed).includes(id));
+  const unusedIdsInTemplate = unusedIds.filter(id => getKeys(data).includes(id)
+    || getKeys(props).includes(id)
+    || getKeys(methods).includes(id)
+    || getKeys(computed).includes(id));
 
   return unusedIdsInTemplate;
 }

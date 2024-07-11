@@ -2,6 +2,7 @@ const babel = require('@babel/core');
 const traverse = require('@babel/traverse').default;
 const t = require("@babel/types");
 const { getScriptContent, getOptions } = require('./parseVue');
+const getKeys = require('./getKeys');
 
 function analyseScript(code) {
   const scriptContent = getScriptContent(code);
@@ -9,34 +10,42 @@ function analyseScript(code) {
 
   const transform2class = {
     ExportDefaultDeclaration(path) {
-      const { node } = path;
-      const declaration = path.node.declaration;
-
-      // 检查是否导出的是对象字面量
-      if (t.isObjectExpression(declaration)) {
-        // 创建一个新的类声明
-        const className = t.identifier('DefaultClass');
-        const classBody = t.classBody([]);
-
-        // 遍历对象属性，转换为类属性或方法
-        node.declaration.properties.forEach(property => {
-          if (t.isObjectProperty(property)) {
-            // 转换属性
-            classBody.body.push(
-              t.classProperty(property.key, property.value)
-            );
-          } else if (t.isObjectMethod(property)) {
-            // 转换方法
-            classBody.body.push(property);
+      let ObjectExp;
+      if (path.node.declaration.type === 'Identifier') {
+        traverse(ast, {
+          VariableDeclaration(variableDeclarationPath) {
+            variableDeclarationPath.node.declarations.forEach(declarator => {
+              if (declarator.id.name === path.node.declaration.name) {
+                ObjectExp = declarator.init;
+              }
+            });
           }
         });
-
-        // 创建新的类声明节点
-        const classDeclaration = t.classDeclaration(className, null, classBody);
-
-        // 替换原来的导出声明
-        path.replaceWith(classDeclaration);
       }
+      ObjectExp = ObjectExp || path.node.declaration;
+      // 检查是否导出的是对象字面量
+      // 创建一个新的类声明
+      const className = t.identifier('DefaultClass');
+      const classBody = t.classBody([]);
+
+      // 遍历对象属性，转换为类属性或方法
+      ObjectExp.properties.forEach(property => {
+        if (t.isObjectProperty(property)) {
+          // 转换属性
+          classBody.body.push(
+            t.classProperty(property.key, property.value)
+          );
+        } else if (t.isObjectMethod(property)) {
+          // 转换方法
+          classBody.body.push(property);
+        }
+      });
+
+      // 创建新的类声明节点
+      const classDeclaration = t.classDeclaration(className, null, classBody);
+
+      // 替换原来的导出声明
+      path.replaceWith(classDeclaration);
     }
   }
 
@@ -44,11 +53,11 @@ function analyseScript(code) {
     ClassDeclaration(path) {
       // 创建一个新的类属性声明
       const customProp = t.classProperty(t.identifier('customProperty'), t.stringLiteral('defaultValue'));
-      const dataDec = Object.keys(data).map(key => t.classProperty(t.identifier(key)));
-      const propsDec = Object.keys(props).map(key => t.classProperty(t.identifier(key)));
-      const computedDec = Object.keys(computed).map(key => t.classProperty(t.identifier(key)));
+      const dataDec = getKeys(data).map(key => t.classProperty(t.identifier(key)));
+      const propsDec = getKeys(props).map(key => t.classProperty(t.identifier(key)));
+      const computedDec = getKeys(computed).map(key => t.classProperty(t.identifier(key)));
 
-      const methodsDec = Object.keys(methods).map(key => t.classMethod('method', t.identifier(key), [], t.blockStatement([])));
+      const methodsDec = getKeys(methods).map(key => t.classMethod('method', t.identifier(key), [], t.blockStatement([])));
 
       // 获取类体
       const classBody = path.node.body;
@@ -96,10 +105,10 @@ function analyseScript(code) {
 
   const unusedIds = [...allIds].filter(item => !usedIds.has(item));
 
-  const unusedIdsInScript = unusedIds.filter(id => Object.keys(data).includes(id)
-    || Object.keys(props).includes(id)
-    || Object.keys(methods).includes(id)
-    || Object.keys(computed).includes(id));
+  const unusedIdsInScript = unusedIds.filter(id => getKeys(data).includes(id)
+    || getKeys(props).includes(id)
+    || getKeys(methods).includes(id)
+    || getKeys(computed).includes(id));
 
   return unusedIdsInScript;
 }

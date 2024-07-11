@@ -14,6 +14,8 @@ const ast = babelParser.parse(scriptContent, {
   const newImports = [];
   
   let componentObject;
+
+  let otherVarDec = [];
   
   // 使用Babel Traverse遍历AST
   babelTraverse(ast, {
@@ -47,6 +49,9 @@ const ast = babelParser.parse(scriptContent, {
     // 访问ExportDefaultDeclaration节点
     ExportDefaultDeclaration(path) {
       componentObject = path.node.declaration;
+    },
+    VariableDeclaration(path) {
+      otherVarDec.push(path.node);
     }
   });
   
@@ -56,7 +61,8 @@ const ast = babelParser.parse(scriptContent, {
         null, // 匿名函数
         [], // 无参数
         t.blockStatement([
-          ...newImports, // 所有变量声明
+          ...newImports,
+          ...otherVarDec,
           t.returnStatement(componentObject) // 返回组件对象
         ])
       ),
