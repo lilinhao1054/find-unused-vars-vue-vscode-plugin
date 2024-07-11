@@ -1,6 +1,8 @@
 {
   "name": "find-unused-vars-vue",
   "displayName": "find-unused-vars-vue",
+  "author": "fffllh",
+  "publisher": "fffllh",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -9,27 +11,38 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onLanguage:vue"
-  ],
+  "contributes": {
+    "commands": [
+        {
+            "command": "find-unused-vars-vue.fuvv",
+            "title": "active fuvv"
+        },
+        {
+          "command": "find-unused-vars-vue.cfuvv",
+          "title": "clear fuvv"
+        }
+    ]
+  },
   "main": "./extension.js",
   "scripts": {
     "lint": "eslint .",
     "pretest": "yarn run lint",
     "test": "vscode-test"
   },
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.24.7",
     "@babel/generator": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
     "@babel/template": "^7.24.7",
     "@babel/traverse": "^7.24.7",
+    "eslint": "^9.6.0",
+    "vue-template-compiler": "^2.7.16"
+  },
+  "devDependencies": {
     "@types/mocha": "^10.0.7",
     "@types/node": "20.x",
     "@types/vscode": "^1.91.0",
     "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.4.0",
-    "eslint": "^9.6.0",
-    "vue-template-compiler": "^2.7.16"
+    "@vscode/test-electron": "^2.4.0"
   }
 }

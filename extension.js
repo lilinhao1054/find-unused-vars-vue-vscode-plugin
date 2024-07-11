@@ -10,19 +10,20 @@ class UnusedVarHoverProvider {
 	constructor() {
 		this.locArr = [];
 	}
-    provideHover(document, position, tokens) {
-        const wordRange = document.getWordRangeAtPosition(position);
-        if (wordRange) {
+	provideHover(document, position, tokens) {
+		const wordRange = document.getWordRangeAtPosition(position);
+		if (wordRange) {
 			if (this.locArr.some(p => wordRange.start.line + 1 === p.start.line && wordRange.end.line + 1 === p.end.line && wordRange.start.character === p.start.column && wordRange.end.character === p.end.column)) {
 				const word = document.getText(wordRange);
 				// 根据word来决定显示的悬停信息
-				const hoverMarkdown = new vscode.MarkdownString(`fuvv: 对SFC文件进行静态分析，**${word}**未被使用`);
+				const type = this.locArr.find(loc => loc.identifierName === word)._t;
+				const hoverMarkdown = new vscode.MarkdownString(`fuvv: 对SFC文件进行静态分析，**${type}: ${word}**未被使用`);
 				hoverMarkdown.isTrusted = true; // 确保Markdown内容是安全的
 				return new vscode.Hover(hoverMarkdown);
 			}
-        }
-        return undefined;
-    }
+		}
+		return undefined;
+	}
 
 	setLocArr(locArr) {
 		this.locArr = locArr;
@@ -50,18 +51,32 @@ async function activate(context) {
 		}
 	}
 
-	// init
-	resovleMark(vscode.window.activeTextEditor.document.getText())
+	let lis1;
+	let lis2;
 
-    const lis1 = vscode.workspace.onDidSaveTextDocument(document => {
-		resovleMark(document.getText());
-    });
+	context.subscriptions.push(vscode.commands.registerCommand('find-unused-vars-vue.fuvv', function () {
+		vscode.window.showInformationMessage('fuvv is active!');
 
-	const lis2 = vscode.window.onDidChangeActiveTextEditor(e => {
-		resovleMark(e.document.getText());
-	})
+		// init
+		resovleMark(vscode.window.activeTextEditor.document.getText());
 
-    context.subscriptions.push(lis1, lis2);
+		lis1 = vscode.workspace.onDidSaveTextDocument(document => {
+			resovleMark(document.getText());
+		});
+
+		lis2 = vscode.window.onDidChangeActiveTextEditor(e => {
+			resovleMark(e.document.getText());
+		})
+
+		context.subscriptions.push(lis1, lis2);
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('find-unused-vars-vue.cfuvv', function () {
+		lis1.dispose();
+		lis2.dispose();
+		vscode.window.activeTextEditor.setDecorations(decorationType, []);
+		hoverProvider.setLocArr([]);
+	}));
 }
 
 /**
@@ -77,14 +92,6 @@ function markUnusedVarInColor(locArr) {
 	));
 	editor.setDecorations(decorationType, []);
 	editor.setDecorations(decorationType, rangeArr);
-}
-
-/**
- * 
- * @param {[]} locArr 
- */
-function addHoverTips(locArr) {
-	
 }
 
 function deactivate() { }

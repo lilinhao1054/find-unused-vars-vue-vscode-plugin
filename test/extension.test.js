@@ -149,11 +149,11 @@ suite('Extension Test Suite', () => {
 			id: 'jkl',
 			start: {
 				line: 6,
-				column: 19,
+				column: 20,
 			},
 			end: {
 				line: 6,
-				column: 24,
+				column: 23,
 			},
 			_t: 'props'
 		}

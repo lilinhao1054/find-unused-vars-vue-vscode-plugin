@@ -53,6 +53,8 @@ module.exports = function (code) {
                 if (property.key.name === 'props') {
                     if (property.value.type === 'ArrayExpression') {
                         property.value.elements.forEach(ele => {
+                            ele.loc.start.column++;
+                            ele.loc.end.column--;
                             propsLocArr.push({ ...ele.loc, identifierName: ele.value });
                         })
                     } else {
