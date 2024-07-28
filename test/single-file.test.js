@@ -1,9 +1,4 @@
 const assert = require('assert');
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
-const vscode = require('vscode');
-// const myExtension = require('../extension');
 const fs = require('fs');
 const path = require('path');
 const fuvv = require('../main');
@@ -12,14 +7,14 @@ const fuvv = require('../main');
 const testTemplate = (testCase, expected) => async () => {
 	const sortById = (a, b) => a.id.localeCompare(b.id);
 
-	const code = fs.readFileSync(path.resolve(__dirname, `./cases/${testCase}.vue`)).toString();
+	const code = fs.readFileSync(path.resolve(__dirname, `./single-file/${testCase}.vue`)).toString();
 	const locArr = await fuvv(code);
 	const resolvedActual = locArr.map(loc => ({ id: loc.identifierName, start: { line: loc.start.line, column: loc.start.column }, end: { line: loc.end.line, column: loc.end.column }, _t: loc._t })).sort(sortById);
 	const resolvedExpected = expected.sort(sortById);
 	assert.deepEqual(resolvedActual, resolvedExpected);
 };
 
-suite('Extension Test Suite', () => {
+suite('Single File Test Suite', () => {
 
 	test('basic test', testTemplate('basic', [
 		{

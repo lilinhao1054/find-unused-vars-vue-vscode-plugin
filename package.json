@@ -13,14 +13,14 @@
   ],
   "contributes": {
     "commands": [
-        {
-            "command": "find-unused-vars-vue.fuvv",
-            "title": "active fuvv"
-        },
-        {
-          "command": "find-unused-vars-vue.cfuvv",
-          "title": "clear fuvv"
-        }
+      {
+        "command": "find-unused-vars-vue.fuvv",
+        "title": "active fuvv"
+      },
+      {
+        "command": "find-unused-vars-vue.cfuvv",
+        "title": "clear fuvv"
+      }
     ]
   },
   "main": "./extension.js",
@@ -35,8 +35,10 @@
     "@babel/preset-env": "^7.24.7",
     "@babel/template": "^7.24.7",
     "@babel/traverse": "^7.24.7",
+    "change-case-commonjs": "^5.4.4",
     "eslint": "^9.6.0",
-    "vue-template-compiler": "^2.7.16"
+    "vue-template-compiler": "^2.7.16",
+    "webpack": "^5.93.0"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.7",

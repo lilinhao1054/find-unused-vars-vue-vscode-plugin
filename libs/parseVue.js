@@ -17,13 +17,15 @@ function getOptions(code) {
     const scriptContent = getScriptContent(code);
     const transformedCode = transformScriptContent(scriptContent);
     const options = new Function(`return ${transformedCode}`)();
-    const { props = {}, data: dataGenFunc = () => ({}), methods = {}, computed = {} } = options;
+    const { props = {}, data: dataGenFunc = () => ({}), methods = {}, computed = {}, components = {}, mixin = [] } = options;
     const data = dataGenFunc();
     return {
         props,
         data,
         methods,
-        computed
+        computed,
+        components,
+        mixin,
     }
 }
 
