@@ -55,8 +55,6 @@ function analyseScript(code) {
 
   const addDec = {
     ClassDeclaration(path) {
-      // 创建一个新的类属性声明
-      const customProp = t.classProperty(t.identifier('customProperty'), t.stringLiteral('defaultValue'));
       const dataDec = getKeys(data).map(key => t.classProperty(t.identifier(key)));
       const propsDec = getKeys(props).map(key => t.classProperty(t.identifier(key)));
       const computedDec = getKeys(computed).map(key => t.classProperty(t.identifier(key)));
