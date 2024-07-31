@@ -30,6 +30,10 @@ function analyseScript(code) {
 
       // 遍历对象属性，转换为类属性或方法
       ObjectExp.properties.forEach(property => {
+        if (t.isObjectProperty(property) || t.isObjectMethod(property)) {
+          property.key.name = "_" + property.key.name;
+          property.key.loc.identifierName = "_" + property.key.loc.identifierName;
+        }
         if (t.isObjectProperty(property)) {
           // 转换属性
           classBody.body.push(

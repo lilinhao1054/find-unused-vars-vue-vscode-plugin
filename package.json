@@ -1,8 +1,8 @@
 {
   "name": "find-unused-vars-vue",
   "displayName": "find-unused-vars-vue",
-  "author": "fffllh",
-  "publisher": "fffllh",
+  "author": "fffzl",
+  "publisher": "fffzl",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -11,16 +11,17 @@
   "categories": [
     "Other"
   ],
+  "activationEvents": [],
   "contributes": {
     "commands": [
-        {
-            "command": "find-unused-vars-vue.fuvv",
-            "title": "active fuvv"
-        },
-        {
-          "command": "find-unused-vars-vue.cfuvv",
-          "title": "clear fuvv"
-        }
+      {
+        "command": "find-unused-vars-vue.fuvv",
+        "title": "active fuvv"
+      },
+      {
+        "command": "find-unused-vars-vue.cfuvv",
+        "title": "clear fuvv"
+      }
     ]
   },
   "main": "./extension.js",
@@ -31,7 +32,6 @@
   },
   "dependencies": {
     "@babel/core": "^7.24.7",
-    "@babel/generator": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
     "@babel/template": "^7.24.7",
     "@babel/traverse": "^7.24.7",

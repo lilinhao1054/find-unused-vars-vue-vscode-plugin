@@ -1,9 +1,11 @@
 <template>
-    <div v-text="abc"></div>
-    <div>{{ count }}</div>
-    <div>{{ doubleCount }}</div>
-    <button @click="increment">+1</button>
-    <button @click="() => decrement()">-1</button>
+    <div>
+        <div v-text="abc"></div>
+        <div>{{ count }}</div>
+        <div>{{ doubleCount }}</div>
+        <button @click="increment">+1</button>
+        <button @click="() => decrement()">-1</button>
+    </div>
 </template>
 <script>
 export default {

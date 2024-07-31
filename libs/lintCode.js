@@ -9,7 +9,6 @@ function getUnusedVarId(messages) {
   });
 }
 
-// Create an instance of ESLint with the configuration passed to the function
 function createESLintInstance(overrideConfig) {
   return new ESLint({
     overrideConfigFile: true,
@@ -18,11 +17,7 @@ function createESLintInstance(overrideConfig) {
   });
 }
 
-// Put previous functions all together
 async function lintCode(code) {
-
-  // The ESLint configuration. Alternatively, you could load the configuration
-  // from an eslint.config.js file or just use the default config.
   const overrideConfig = {
     rules: {
       "no-unused-vars": "error",
