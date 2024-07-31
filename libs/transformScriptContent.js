@@ -51,7 +51,8 @@ const ast = babelParser.parse(scriptContent, {
       componentObject = path.node.declaration;
     },
     VariableDeclaration(path) {
-      otherVarDec.push(path.node);
+      // 只添加全局的变量声明
+      if (!path.scope.getFunctionParent())  otherVarDec.push(path.node);
     }
   });
   
