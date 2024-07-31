@@ -1,6 +1,8 @@
 <template>
-    <div>{{ count }}</div>
-    <child-comp />
+    <div>
+        <div>{{ count }}</div>
+        <child-comp />
+    </div>
 </template>
 <script>
 import ChildComp from '@/components/child-comp.vue';

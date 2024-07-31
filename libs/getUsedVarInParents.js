@@ -126,28 +126,22 @@ const resolveParentFile = (file, loc) => {
         });
       }
       ObjectExp = ObjectExp || path.node.declaration;
-      // 检查是否导出的是对象字面量
-      // 创建一个新的类声明
+
       const className = t.identifier('DefaultClass');
       const classBody = t.classBody([]);
 
-      // 遍历对象属性，转换为类属性或方法
       ObjectExp.properties.forEach(property => {
         if (t.isObjectProperty(property)) {
-          // 转换属性
           classBody.body.push(
             t.classProperty(property.key, property.value)
           );
         } else if (t.isObjectMethod(property)) {
-          // 转换方法
           classBody.body.push(property);
         }
       });
 
-      // 创建新的类声明节点
       const classDeclaration = t.classDeclaration(className, null, classBody);
 
-      // 替换原来的导出声明
       path.replaceWith(classDeclaration);
     }
   }

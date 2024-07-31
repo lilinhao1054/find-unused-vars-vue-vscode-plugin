@@ -14,17 +14,17 @@ const testTemplate = (testCase, expected) => async () => {
 	assert.deepEqual(resolvedActual, resolvedExpected);
 };
 
-suite('Single File Test Suite', () => {
+suite('Extension Test Suite', () => {
 
 	test('basic test', testTemplate('basic', [
 		{
 			id: "jkl",
 			start: {
-				line: 14,
+				line: 16,
 				column: 8,
 			},
 			end: {
-				line: 14,
+				line: 16,
 				column: 11,
 			},
 			_t: 'props',
@@ -32,11 +32,11 @@ suite('Single File Test Suite', () => {
 		{
 			id: "negativeCount",
 			start: {
-				line: 34,
+				line: 36,
 				column: 8,
 			},
 			end: {
-				line: 34,
+				line: 36,
 				column: 21,
 			},
 			_t: "computed",
@@ -62,11 +62,11 @@ suite('Single File Test Suite', () => {
 		{
 			id: "jkl",
 			start: {
-				line: 14,
+				line: 16,
 				column: 8,
 			},
 			end: {
-				line: 14,
+				line: 16,
 				column: 11,
 			},
 			_t: 'props',
@@ -74,11 +74,11 @@ suite('Single File Test Suite', () => {
 		{
 			id: "negativeCount",
 			start: {
-				line: 34,
+				line: 36,
 				column: 8,
 			},
 			end: {
-				line: 34,
+				line: 36,
 				column: 21,
 			},
 			_t: "computed",
@@ -116,11 +116,11 @@ suite('Single File Test Suite', () => {
 		{
 			id: "jkl",
 			start: {
-				line: 14,
+				line: 16,
 				column: 8,
 			},
 			end: {
-				line: 14,
+				line: 16,
 				column: 11,
 			},
 			_t: 'props',
@@ -128,11 +128,11 @@ suite('Single File Test Suite', () => {
 		{
 			id: "negativeCount",
 			start: {
-				line: 34,
+				line: 36,
 				column: 8,
 			},
 			end: {
-				line: 34,
+				line: 36,
 				column: 21,
 			},
 			_t: "computed",
@@ -212,11 +212,11 @@ suite('Single File Test Suite', () => {
 		{
 			id: 'unused',
 			start: {
-				line: 15,
+				line: 17,
 				column: 12,
 			},
 			end: {
-				line: 15,
+				line: 17,
 				column: 18,
 			},
 			_t: 'data',
