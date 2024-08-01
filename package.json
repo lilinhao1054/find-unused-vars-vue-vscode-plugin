@@ -5,6 +5,10 @@
   "publisher": "fffzl",
   "description": "",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lilinhao1054/find-unused-vars-vue-vscode-plugin.git"
+  },
   "engines": {
     "vscode": "^1.91.0"
   },

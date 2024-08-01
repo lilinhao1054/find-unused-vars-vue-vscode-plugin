@@ -39,7 +39,7 @@ const ast = babelParser.parse(scriptContent, {
   
       // 将每个导入转换为变量声明
       importNames.forEach(specifier => {
-        const varDecl = babelTemplate.statement(`var ${specifier.name};`)();
+        const varDecl = babelTemplate.statement(`var ${specifier.name};`, { placeholderPattern: false })();
         newImports.push(varDecl);
       });
   
