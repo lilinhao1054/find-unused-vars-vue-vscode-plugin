@@ -1,5 +1,6 @@
 const { compile } = require('vue-template-compiler');
-const transformScriptContent = require('./transformScriptContent');
+const babel = require("@babel/core");
+const traverse = require("@babel/traverse").default;
 
 function getRender(code) {
     const { render } = compile(code);
@@ -15,10 +16,64 @@ function getScriptContent(code) {
 
 function getOptions(code) {
     const scriptContent = getScriptContent(code);
-    const transformedCode = transformScriptContent(scriptContent);
-    const options = new Function(`return ${transformedCode}`)();
-    const { props = {}, data: dataGenFunc = () => ({}), methods = {}, computed = {} } = options;
-    const data = dataGenFunc();
+    const props = [], data = [], methods = [], computed = [];
+    
+    
+    if (scriptContent) {
+        const ast = babel.parse(scriptContent, {
+            sourceType: "module"
+        });
+        
+        const visitor = {
+            ExportDefaultDeclaration(path) {
+                let ObjectExp;
+                if (path.node.declaration.type === 'Identifier') {
+                    traverse(ast, {
+                        VariableDeclaration(variableDeclarationPath) {
+                            variableDeclarationPath.node.declarations.forEach(declarator => {
+                                if (declarator.id.name === path.node.declaration.name) {
+                                    ObjectExp = declarator.init;
+                                }
+                            });
+                        }
+                    });
+                }
+                ObjectExp = ObjectExp || path.node.declaration;
+                ObjectExp.properties.forEach(property => {
+                    if (property.key.name === 'props') {
+                        if (property.value.type === 'ArrayExpression') {
+                            property.value.elements.forEach(ele => {
+                                props.push(ele.value);
+                            })
+                        } else {
+                            property.value.properties.forEach(p => {
+                                p.key && props.push(p.key.name)
+                            })
+                        }
+                    }
+                    if (property.key.name === 'methods') {
+                        property.value.properties.forEach(p => {
+                            p.key && methods.push(p.key.name);
+                        })
+                    }
+                    if (property.key.name === 'data') {
+                        const argument = property.body.body.find(n => n.type === 'ReturnStatement').argument;
+                        argument.type === 'ObjectExpression' && argument.properties.forEach(n => {
+                            n.key && data.push(n.key.name);
+                        })
+                    }
+                    if (property.key.name === 'computed') {
+                        property.value.properties.forEach(p => {
+                            p.key && computed.push(p.key.name);
+                        })
+                    }
+                });
+            }
+        };
+
+        traverse(ast, visitor);
+    }
+
     return {
         props,
         data,

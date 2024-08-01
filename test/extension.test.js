@@ -254,4 +254,6 @@ suite('Extension Test Suite', () => {
 			_t: 'data',
 		}
 	]));
+
+	test('no-script test', testTemplate('no-script', []));
 });
